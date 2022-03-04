@@ -3,11 +3,12 @@ let	doc = document.documentElement,
     ctx = can.getContext('2d');
 	width = doc.clientWidth,
     height = doc.clientHeight,
-	scale = 50,
 	map = [],
 	mapW = 20,
 	mapH = 20,
-	disturbance = 15;
+	scale = Math.round(width / (mapW + mapH)),
+	disturbance = 20;
+
 
 // Подгон размеров холста под размер экрана браузера
 can.width = width;
@@ -15,8 +16,17 @@ can.height = height;
 
 ctx.strokeStyle = '#FFF';
 
-let	x_offset = Math.round((width / 2) - (scale * mapW / 2)),
-	y_offset = Math.round((height / 2) - (scale * mapH / 2));
+// Сдвиг
+function ix(x, y) {
+	return (x - y);
+}
+
+function iy(x, y) {
+	return ((x + y) / 2) * scale;
+}
+
+let	x_offset = (width / 2) - ((mapW - 1) / 2),
+	y_offset = (height / 2) - (iy(mapH - 1, mapW - 1) / 2);
 
 // Иммитация алгоритма Брезенхейма
 function brhm(x0, y0, x1, y1) {
@@ -47,14 +57,12 @@ map = createMap(map, mapW, mapH);
 
 // Расчёт координаты x в изометрии
 function xIso(x, y) {
-	// console.log("x:", x, "-", y, "*", scale, "=", (x - y) * scale);
 	return((x - map[y][x] / 50) - (y - map[y][x] / 50)) * scale;
 }
 
 // Расчёт координаты y в изометрии
 function yIso(x, y)
 {
-	// console.log("y: (", x, "+", y, "/ 2) *", scale, "=", ((x + y) / 2) * scale);
 	return(((x - map[y][x] / 50) + (y - map[y][x] / 50)) / 2) * scale;
 }
 
@@ -89,18 +97,18 @@ function drawLandscape() {
 drawLandscape();
 document.addEventListener('keydown', (event) => {
 	// Зум
-	if (event.keyCode == 69) {
-		y_offset -= 5;
-		x_offset -= 5;
-		scale++;
-		drawLandscape();
-	}
-	else if (event.keyCode == 81) {
-		y_offset += 5;
-		x_offset += 5;
-		scale--;
-		drawLandscape();
-	}
+	// if (event.keyCode == 69) {
+	// 	y_offset -= 5;
+	// 	x_offset -= 5;
+	// 	scale++;
+	// 	drawLandscape();
+	// }
+	// else if (event.keyCode == 81) {
+	// 	y_offset += 5;
+	// 	x_offset += 5;
+	// 	scale--;
+	// 	drawLandscape();
+	// }
 	// Сдвиг
 	if (event.keyCode == 87) {
 		y_offset += 10;
@@ -116,6 +124,22 @@ document.addEventListener('keydown', (event) => {
 	}
 	else if (event.keyCode == 68) {
 		x_offset -= 10;
+		drawLandscape();
+	}
+})
+
+// Зум
+document.addEventListener('wheel', (event) => {
+	if (event.deltaY < 0) {
+		y_offset -= 5;
+		// x_offset -= 5;
+		scale++;
+		drawLandscape();
+	}
+	else if (event.deltaY > 0) {
+		y_offset += 5;
+		// x_offset += 5;
+		scale--;
 		drawLandscape();
 	}
 })
