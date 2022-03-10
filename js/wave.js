@@ -1,7 +1,9 @@
 let changeMap = createMap(map, mapW, mapH),
 	waveRow = 0,
-	waveSize = 15,
-	isWave = true;
+	waveSize = 12,
+	waveBtn = document.querySelector('#waveBtn'),
+	waveBtnSign = document.querySelector('#waveBtnSign'),
+	isWave = false;
 
 function wave() {
 	for (let y = 0; y < map.length; y++)
@@ -39,3 +41,16 @@ let timer = setInterval(() => {
 	wave();
 	drawLandscape();
 }, 900 / disturbance);
+
+waveBtn.onclick = () => {
+	waveBtn.classList.toggle('wave-on');
+	if (isWave) {
+		isWave = false;
+		waveBtnSign.innerHTML = '▶';
+	}
+	else {
+		isWave = true;
+		waveRow = 0;
+		waveBtnSign.innerHTML = '⏹';
+	}
+}

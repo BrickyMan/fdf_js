@@ -9,7 +9,6 @@ let	doc = document.documentElement,
 	scale = Math.round(width / (mapW + mapH)),
 	disturbance = 20;
 
-
 // Подгон размеров холста под размер экрана браузера
 can.width = width;
 can.height = height;
